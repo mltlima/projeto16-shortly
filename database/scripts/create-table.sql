@@ -10,3 +10,10 @@ CREATE TABLE "sessions"(
     "userId" INTEGER REFERENCES "users"("id") NOT NULL,
     "token" TEXT NOT NULL
 );
+
+CREATE TABLE "urls"(
+    "id" SERIAL PRIMARY KEY,
+    "userId" INTEGER REFERENCES "users"("id") NOT NULL,
+    "url" TEXT NOT NULL,
+    "shortUrl" TEXT NOT NULL
+);

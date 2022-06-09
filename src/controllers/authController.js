@@ -24,10 +24,10 @@ export async function signIn(req, res) {
     const { email, password } = req.body;
     const secretKey = process.env.JWT_SECRET;
 
-    //try {
+    try {
         const user = await connection.query("SELECT * FROM users WHERE email = $1", [email]);
         if (!user.rows[0]) { return res.sendstatus(401).send('User not found'); }
-
+        
         if(bcrypt.compare(password, user.rows[0].password)) {
             const data = {name: user.rows[0].name, email: user.rows[0].email, id: user.rows[0].id};
             const token = jwt.sign(data, secretKey);
@@ -39,7 +39,7 @@ export async function signIn(req, res) {
         } else{
             res.status(401).send("Wrong password");
         }
-    try{
+    
     } catch (error) {
         res.status(500).send(error);
     }
