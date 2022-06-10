@@ -18,7 +18,7 @@ export async function getUser(req, res) {
 export async function ranking(req, res) {
     try {
         const users = await connection.query(`SELECT usr."id", usr."name", COUNT(url."id") AS "linksCount",
-         SUM(url."viewCount") AS "visitCount" 
+         COALESCE( SUM(url."viewCount"), 0) AS "visitCount" 
          FROM "users" usr 
          LEFT JOIN "urls" url ON usr."id" = url."userId"
          GROUP BY usr."id", usr."name"

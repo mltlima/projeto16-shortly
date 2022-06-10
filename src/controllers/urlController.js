@@ -12,7 +12,7 @@ export async function shortenUrl(req, res) {
         res.status(201).send({shortUrl});
     
     } catch (error) {
-        res.status(500).send(error);
+        res.status(422).send(error);
     }   
 }
 
@@ -54,7 +54,7 @@ export async function deleteUrl(req, res) {
         if (url.rows[0].userId !== user.id) {
             return res.sendStatus(401);
         } 
-        
+
         await connection.query(`DELETE FROM "urls" WHERE "id" = $1`, [id]);
         res.sendStatus(204);
 
