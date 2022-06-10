@@ -37,10 +37,28 @@ export async function getUrl(req, res) {
         const url = await connection.query(`SELECT * FROM "urls" WHERE "shortUrl" = $1`, [shortUrl]);
         
         await connection.query(`UPDATE "urls" SET "viewCount" = "viewCount" + 1 WHERE "id" = $1`, [url.rows[0].id]);	
-        
+
         res.redirect(url.rows[0].url);
         
     } catch (error) {
         res.sendStatus(404)
+    }
+}
+
+export async function deleteUrl(req, res) {
+    const { id } = req.params;
+    const { user } = JSON.parse(JSON.stringify(res.locals));
+
+    try {
+        const url = await connection.query(`SELECT * FROM "urls" WHERE "id" = $1`, [id]);
+        if (url.rows[0].userId !== user.id) {
+            return res.sendStatus(401);
+        } 
+        
+        await connection.query(`DELETE FROM "urls" WHERE "id" = $1`, [id]);
+        res.sendStatus(204);
+
+    } catch (error) {
+        res.sendStatus(404);
     }
 }
