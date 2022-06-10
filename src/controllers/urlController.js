@@ -29,3 +29,18 @@ export async function getShortenedUrl(req, res) {
         res.sendStatus(404);
     }
 }
+
+export async function getUrl(req, res) {
+    const { shortUrl } = req.params;
+
+    try {
+        const url = await connection.query(`SELECT * FROM "urls" WHERE "shortUrl" = $1`, [shortUrl]);
+        
+        await connection.query(`UPDATE "urls" SET "viewCount" = "viewCount" + 1 WHERE "id" = $1`, [url.rows[0].id]);	
+        
+        res.redirect(url.rows[0].url);
+        
+    } catch (error) {
+        res.sendStatus(404)
+    }
+}
