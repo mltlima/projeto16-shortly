@@ -15,3 +15,17 @@ export async function shortenUrl(req, res) {
         res.status(500).send(error);
     }   
 }
+
+export async function getShortenedUrl(req, res) {
+    const { id } = req.params;
+    
+    try {
+        const url = await connection.query(`SELECT * FROM "urls" WHERE "id" = $1`, [id]);
+        const data = {id, shortUrl: url.rows[0].shortUrl, url: url.rows[0].url};
+
+        res.status(200).send(data);
+
+    } catch (error) {
+        res.sendStatus(404);
+    }
+}

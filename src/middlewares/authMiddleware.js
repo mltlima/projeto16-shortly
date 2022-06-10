@@ -11,7 +11,6 @@ export async function validateToken(req, res, next) {
 
     try {
         const user = jwt.verify(token, secretKey);
-        console.log(user)
         if (!user) {return res.status(401);}
         res.locals.user = user;
         next();
